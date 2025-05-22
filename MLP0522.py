@@ -80,7 +80,7 @@ continuous_features_array = np.array(continuous_features).reshape(1, -1)
 
 
 # 关键修改：使用 pandas DataFrame 来确保列名
-continuous_features_df = pd.DataFrame(continuous_features_array, columns=["Lymphocyte_Percentage","Mean_Corpuscular_Hemoglobin_Concentration","Albumin","Estimated_Glomerular_Filtration_Rate","Left_Ventricular_Ejection_Fraction"])
+continuous_features_df = pd.DataFrame(continuous_features_array, columns=["Age","Lymphocyte_Percentage","Mean_Corpuscular_Hemoglobin_Concentration","Albumin","Estimated_Glomerular_Filtration_Rate","Left_Ventricular_Ejection_Fraction"])
 
 # 标准化连续变量
 continuous_features_standardized = scaler.transform(continuous_features_df)
