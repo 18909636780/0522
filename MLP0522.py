@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 
 # Load the model
 model = joblib.load('MLP.pkl')
-scaler = joblib.load('standardized_data.joblib.pkl') 
+scaler = joblib.load('standardized_data.joblib2.pkl') 
 
 # Define feature options
 Capacity_for_Action_options = {    
