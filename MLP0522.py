@@ -128,8 +128,8 @@ if st.button("Predict"):
     # 创建SHAP解释器
     # 假设 X_train 是用于训练模型的特征数据
     df=pd.read_csv('test_data0312.csv',encoding='utf8')
-    ytrain=df.PHLF
-    x_train=df.drop('PHLF',axis=1)
+    ytrain=df.Frailty
+    x_train=df.drop('Frailty',axis=1)
     from sklearn.preprocessing import StandardScaler
     continuous_cols = [1,4]
     xtrain = x_train.copy()
