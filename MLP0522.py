@@ -122,32 +122,35 @@ if st.button("Predict"):
           )    
     st.write(advice)
 
-    # SHAP Explanation
-    st.subheader("SHAP Force Plot Explanation")
 
-    # 创建SHAP解释器
-    # 假设 X_train 是用于训练模型的特征数据
-    df=pd.read_csv('test_data0312.csv',encoding='utf8')
-    ytrain=df.Frailty
-    x_train=df.drop('Frailty',axis=1)
-    from sklearn.preprocessing import StandardScaler
-    continuous_cols = [1,4]
-    xtrain = x_train.copy()
-    scaler = StandardScaler()
-    xtrain.iloc[:, continuous_cols] = scaler.fit_transform(x_train.iloc[:, continuous_cols])
+# SHAP Explanation
+st.subheader("SHAP Waterfall Plot Explanation")
 
-    explainer_shap = shap.KernelExplainer(model.predict_proba, xtrain)
-    
-    # 获取SHAP值
-    shap_values = explainer_shap.shap_values(pd.DataFrame(final_features_df,columns=feature_names))
-    
-  # 将标准化前的原始数据存储在变量中
-    original_feature_values = pd.DataFrame(features, columns=feature_names)
+# 读取数据并预处理
+df = pd.read_csv('test_data0312.csv', encoding='utf8')
+ytrain = df.Frailty
+x_train = df.drop('Frailty', axis=1)
 
-# Display the SHAP force plot for the predicted class    
-    if predicted_class == 1:        
-        shap.force_plot(explainer_shap.expected_value[1], shap_values[:,:,1], original_feature_values, matplotlib=True)    
-    else:        
-        shap.force_plot(explainer_shap.expected_value[0], shap_values[:,:,0], original_feature_values, matplotlib=True)    
-    plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)    
-    st.image("shap_force_plot.png", caption='SHAP Force Plot Explanation')
+# 标准化连续变量
+continuous_cols = [1, 4]  # 假设这是需要标准化的列索引
+scaler = StandardScaler()
+xtrain = x_train.copy()
+xtrain.iloc[:, continuous_cols] = scaler.fit_transform(x_train.iloc[:, continuous_cols])
+
+# 创建SHAP解释器
+explainer_shap = shap.Explainer(model, xtrain)  # 改用Explainer而不是KernelExplainer
+
+# 获取SHAP值（注意：这里使用原始特征值，不需要再标准化）
+shap_values = explainer_shap(pd.DataFrame(final_features_df, columns=feature_names))
+
+# 创建瀑布图
+if predicted_class == 1:
+    # 对于预测类别1
+    shap_plot = shap.plots.waterfall(shap_values[0, :, 1], max_display=10)  # 显示前10个最重要的特征
+else:
+    # 对于预测类别0
+    shap_plot = shap.plots.waterfall(shap_values[0, :, 0], max_display=10)
+
+# 保存并显示图像
+plt.savefig("shap_waterfall_plot.png", bbox_inches='tight', dpi=1200)
+st.image("shap_waterfall_plot.png", caption='SHAP Waterfall Plot Explanation')
