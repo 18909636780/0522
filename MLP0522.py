@@ -122,7 +122,6 @@ if st.button("Predict"):
           )    
     st.write(advice)
 
-
 # SHAP Explanation
 st.subheader("SHAP Waterfall Plot Explanation")
 
@@ -137,20 +136,29 @@ scaler = StandardScaler()
 xtrain = x_train.copy()
 xtrain.iloc[:, continuous_cols] = scaler.fit_transform(x_train.iloc[:, continuous_cols])
 
-# 创建SHAP解释器
-explainer_shap = shap.Explainer(model, xtrain)  # 改用Explainer而不是KernelExplainer
+# 创建适合神经网络的SHAP解释器
+explainer_shap = shap.KernelExplainer(model.predict_proba, xtrain)  # 使用KernelExplainer
 
-# 获取SHAP值（注意：这里使用原始特征值，不需要再标准化）
-shap_values = explainer_shap(pd.DataFrame(final_features_df, columns=feature_names))
+# 获取SHAP值（注意输入数据需要是DataFrame格式）
+sample_to_explain = pd.DataFrame(final_features_df, columns=feature_names)
+shap_values = explainer_shap.shap_values(sample_to_explain)
 
 # 创建瀑布图
+plt.figure()
 if predicted_class == 1:
     # 对于预测类别1
-    shap_plot = shap.plots.waterfall(shap_values[0, :, 1], max_display=10)  # 显示前10个最重要的特征
+    shap.plots._waterfall.waterfall_legacy(explainer_shap.expected_value[1], 
+                                         shap_values[1][0], 
+                                         feature_names=feature_names,
+                                         max_display=10)
 else:
     # 对于预测类别0
-    shap_plot = shap.plots.waterfall(shap_values[0, :, 0], max_display=10)
+    shap.plots._waterfall.waterfall_legacy(explainer_shap.expected_value[0], 
+                                         shap_values[0][0], 
+                                         feature_names=feature_names,
+                                         max_display=10)
 
 # 保存并显示图像
+plt.tight_layout()
 plt.savefig("shap_waterfall_plot.png", bbox_inches='tight', dpi=1200)
 st.image("shap_waterfall_plot.png", caption='SHAP Waterfall Plot Explanation')
