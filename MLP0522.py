@@ -127,20 +127,30 @@ st.subheader("SHAP Waterfall Plot Explanation")
 
 # 读取数据并预处理
 df = pd.read_csv('test_data0312.csv', encoding='utf8')
-ytrain = df.Frailty
-x_train = df.drop('Frailty', axis=1)
+ytest = df.Frailty
+xtest = df.drop('Frailty', axis=1)
 
-# 标准化连续变量
-continuous_cols = [1, 4]  # 假设这是需要标准化的列索引
+# 定义连续变量的列名（假设列名为 'col3', 'col4', 'col5', 'col6', 'col7'）
+continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 'Albumin', 'Estimated_Glomerular_Filtration_Rate','Left_Ventricular_Ejection_Fraction']
+
+# 初始化标准化器
 scaler = StandardScaler()
-xtrain = x_train.copy()
-xtrain.iloc[:, continuous_cols] = scaler.fit_transform(x_train.iloc[:, continuous_cols])
 
-# 创建适合神经网络的SHAP解释器
-explainer_shap = shap.KernelExplainer(model.predict_proba, xtrain)  # 使用KernelExplainer
+# 对测试集的连续变量列进行标准化（使用训练集的均值和标准差）
+xtest_standard = xtest.copy()
+xtest_standard[continuous_cols] = scaler.transform(xtest[continuous_cols])
 
-# 获取SHAP值（注意输入数据需要是DataFrame格式）
+# 创建SHAP解释器
+explainer_shap = shap.KernelExplainer(model.predict_proba, shap.sample(xtest_standard, 100))  # 使用100个样本作为背景数据
+
+# 准备要解释的样本数据
 sample_to_explain = pd.DataFrame(final_features_df, columns=feature_names)
+
+# 获取模型预测概率和预测类别
+predicted_proba = model.predict_proba(sample_to_explain)
+predicted_class = model.predict(sample_to_explain)[0]  # 获取预测类别
+
+# 获取SHAP值
 shap_values = explainer_shap.shap_values(sample_to_explain)
 
 # 创建瀑布图
@@ -157,6 +167,9 @@ else:
                                          shap_values[0][0], 
                                          feature_names=feature_names,
                                          max_display=10)
+
+# 添加图表标题
+plt.title(f"SHAP Waterfall Plot (Predicted Class: {predicted_class})")
 
 # 保存并显示图像
 plt.tight_layout()
