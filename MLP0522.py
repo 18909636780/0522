@@ -134,15 +134,10 @@ xtest = df.drop('Frailty', axis=1)
 continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 
                   'Albumin', 'Estimated_Glomerular_Filtration_Rate', 'Left_Ventricular_Ejection_Fraction']
 
-xtrain = df_train[continuous_cols]
 xtest = df_test[continuous_cols]
 
 # 初始化标准化器
 scaler = StandardScaler()
-
-# 对训练数据进行拟合和转换
-xtrain_standard = xtrain.copy()
-xtrain_standard[continuous_cols] = scaler.fit_transform(xtrain[continuous_cols])
 
 # 对测试数据进行转换（使用训练数据的参数）
 xtest_standard = xtest.copy()
