@@ -19,9 +19,9 @@ Capacity_for_Action_options = {
 }
 
 NYHA_Functional_Class_options = {       
-    1: 'Ⅱ',    
-    2: 'Ⅲ',    
-    3: 'Ⅳ',
+    0: 'Ⅱ',    
+    1: 'Ⅲ',    
+    2: 'Ⅳ',
 }
 
 
@@ -53,7 +53,7 @@ Cerebral_Infarction = st.selectbox("Cerebral_Infarction:", options=[0, 1], forma
 Lymphocyte_Percentage = st.number_input("Lymphocyte_Percentage(%):", min_value=1, max_value=100, value=50)
 
 # Mean_Corpuscular_Hemoglobin_Concentration
-Mean_Corpuscular_Hemoglobin_Concentration = st.number_input("Mean_Corpuscular_Hemoglobin_Concentration(g/L):", min_value=1, max_value=100, value=50)
+Mean_Corpuscular_Hemoglobin_Concentration = st.number_input("Mean_Corpuscular_Hemoglobin_Concentration(g/L):", min_value=1, max_value=500, value=250)
 
 # Albumin
 Albumin = st.number_input("Albumin(g/L):", min_value=1, max_value=100, value=40)
