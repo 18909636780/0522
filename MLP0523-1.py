@@ -157,7 +157,7 @@ with st.spinner("Generating explanation..."):
         col1, col2 = st.columns([2, 1])  # 第一列宽度是第二列的两倍
         
         # 获取预测类别
-        predicted_class = model.predict(final_features
+        predicted_class = model.predict(final_features)
                                         
         with col1:
             # 创建瀑布图
