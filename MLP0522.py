@@ -13,9 +13,9 @@ scaler = joblib.load('standardized_data.joblib2.pkl')
 
 # Define feature options
 Capacity_for_Action_options = {    
-    0: '0(0)',    
-    1: '1(1)',    
-    2: '2(2)',    
+    0: 'bedridden',    
+    1: 'wheelchair_dependent',    
+    2: 'ambulatory',    
 }
 
 NYHA_Functional_Class_options = {       
@@ -130,13 +130,21 @@ df = pd.read_csv('test_data0312.csv', encoding='utf8')
 ytest = df.Frailty
 xtest = df.drop('Frailty', axis=1)
 
-# 定义连续变量的列名（假设列名为 'col3', 'col4', 'col5', 'col6', 'col7'）
-continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 'Albumin', 'Estimated_Glomerular_Filtration_Rate','Left_Ventricular_Ejection_Fraction']
+# 定义特征和标签
+continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 
+                  'Albumin', 'Estimated_Glomerular_Filtration_Rate', 'Left_Ventricular_Ejection_Fraction']
+
+xtrain = df_train[continuous_cols]
+xtest = df_test[continuous_cols]
 
 # 初始化标准化器
 scaler = StandardScaler()
 
-# 对测试集的连续变量列进行标准化（使用训练集的均值和标准差）
+# 对训练数据进行拟合和转换
+xtrain_standard = xtrain.copy()
+xtrain_standard[continuous_cols] = scaler.fit_transform(xtrain[continuous_cols])
+
+# 对测试数据进行转换（使用训练数据的参数）
 xtest_standard = xtest.copy()
 xtest_standard[continuous_cols] = scaler.transform(xtest[continuous_cols])
 
