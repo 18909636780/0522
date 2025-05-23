@@ -123,58 +123,32 @@ if st.button("Predict"):
     st.write(advice)
 
 # SHAP Explanation
-st.subheader("SHAP Waterfall Plot Explanation")
+    st.subheader("Frailty_predictor")
 
-# 读取数据并预处理
-df = pd.read_csv('test_data0312.csv', encoding='utf8')
-ytest = df.Frailty
-xtest = df.drop('Frailty', axis=1)
+    # 创建SHAP解释器
+    # 假设 X_train 是用于训练模型的特征数据
+    df=pd.read_csv('test_data0312.csv',encoding='utf8')
+    ytest=df.Frailty
+    x_test=df.drop('Frailty',axis=1)
+    from sklearn.preprocessing import StandardScaler
+    continuous_cols = [1,4]
+    xtest = x_test.copy()
+    scaler = StandardScaler()
+    xtest.iloc[:, continuous_cols] = scaler.fit_transform(x_test.iloc[:, continuous_cols])
 
-# 定义特征和标签
-continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 
-                  'Albumin', 'Estimated_Glomerular_Filtration_Rate', 'Left_Ventricular_Ejection_Fraction']
+    explainer_shap = shap.KernelExplainer(model.predict_proba, xtest)
+    
+    # 获取SHAP值
+    shap_values = explainer_shap.shap_values(pd.DataFrame(final_features_df,columns=feature_names))
+    
+  # 将标准化前的原始数据存储在变量中
+    original_feature_values = pd.DataFrame(features, columns=feature_names)
 
-xtest = df[continuous_cols]
+# Display the SHAP force plot for the predicted class    
+    if predicted_class == 1:        
+        shap.force_plot(explainer_shap.expected_value[1], shap_values[:,:,1], original_feature_values, matplotlib=True)    
+    else:        
+        shap.force_plot(explainer_shap.expected_value[0], shap_values[:,:,0], original_feature_values, matplotlib=True)    
+    plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)    
+    st.image("shap_force_plot.png", caption='SHAP Force Plot Explanation')
 
-# 初始化标准化器
-scaler = StandardScaler()
-
-# 对测试数据进行转换（使用训练数据的参数）
-xtest_standard = xtest.copy()
-xtest_standard[continuous_cols] = scaler.transform(xtest[continuous_cols])
-
-# 创建SHAP解释器
-explainer_shap = shap.KernelExplainer(model.predict_proba, shap.sample(xtest_standard, 100))  # 使用100个样本作为背景数据
-
-# 准备要解释的样本数据
-sample_to_explain = pd.DataFrame(final_features_df, columns=feature_names)
-
-# 获取模型预测概率和预测类别
-predicted_proba = model.predict_proba(sample_to_explain)
-predicted_class = model.predict(sample_to_explain)[0]  # 获取预测类别
-
-# 获取SHAP值
-shap_values = explainer_shap.shap_values(sample_to_explain)
-
-# 创建瀑布图
-plt.figure()
-if predicted_class == 1:
-    # 对于预测类别1
-    shap.plots._waterfall.waterfall_legacy(explainer_shap.expected_value[1], 
-                                         shap_values[1][0], 
-                                         feature_names=feature_names,
-                                         max_display=10)
-else:
-    # 对于预测类别0
-    shap.plots._waterfall.waterfall_legacy(explainer_shap.expected_value[0], 
-                                         shap_values[0][0], 
-                                         feature_names=feature_names,
-                                         max_display=10)
-
-# 添加图表标题
-plt.title(f"SHAP Waterfall Plot (Predicted Class: {predicted_class})")
-
-# 保存并显示图像
-plt.tight_layout()
-plt.savefig("shap_waterfall_plot.png", bbox_inches='tight', dpi=1200)
-st.image("shap_waterfall_plot.png", caption='SHAP Waterfall Plot Explanation')
