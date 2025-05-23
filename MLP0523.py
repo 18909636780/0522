@@ -151,6 +151,9 @@ with st.spinner("Generating explanation..."):
         
         # 计算SHAP值（final_features_df已经是标准化后的数据）
         shap_values = explainer.shap_values(final_features_df)
+
+        # 获取预测类别（关键修复）
+        predicted_class = model.predict(final_features_df)[0]  # 确保这行存在
         
        # 创建瀑布图 - 注意这里的缩进
         plt.figure(figsize=(10, 6))  # 确保这行没有多余缩进
