@@ -134,7 +134,7 @@ xtest = df.drop('Frailty', axis=1)
 continuous_cols = ['Age', 'Lymphocyte_Percentage', 'Mean_Corpuscular_Hemoglobin_Concentration', 
                   'Albumin', 'Estimated_Glomerular_Filtration_Rate', 'Left_Ventricular_Ejection_Fraction']
 
-xtest = df_test[continuous_cols]
+xtest = df[continuous_cols]
 
 # 初始化标准化器
 scaler = StandardScaler()
