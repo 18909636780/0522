@@ -152,24 +152,24 @@ with st.spinner("Generating explanation..."):
         # 计算SHAP值（final_features_df已经是标准化后的数据）
         shap_values = explainer.shap_values(final_features_df)
         
-       # 创建瀑布图
-            plt.figure(figsize=(10, 6))
-            if predicted_class == 1:
-                shap.plots.waterfall(shap_values[1][0], 
-                                   max_display=10,
-                                   show=False)
-            else:
-                shap.plots.waterfall(shap_values[0][0],
-                                   max_display=10,
-                                   show=False)
-            
-            plt.title(f"Feature Contributions (Predicted Class: {predicted_class})")
-            st.pyplot(plt.gcf(), clear_figure=True)
-            
-            # 添加特征值表格
-            st.subheader("Input Feature Values")
-            st.dataframe(final_features_df.T.style.format("{:.2f}"))
-            
-        except Exception as e:
-            st.error(f"Error generating SHAP explanation: {str(e)}")
+       # 创建瀑布图 - 注意这里的缩进
+        plt.figure(figsize=(10, 6))  # 确保这行没有多余缩进
+        if predicted_class == 1:
+            shap.plots.waterfall(shap_values[1][0], 
+                               max_display=10,
+                               show=False)
+        else:
+            shap.plots.waterfall(shap_values[0][0],
+                               max_display=10,
+                               show=False)
+        
+        plt.title(f"Feature Contributions (Predicted Class: {predicted_class})")
+        st.pyplot(plt.gcf(), clear_figure=True)
+        
+        # 添加特征值表格
+        st.subheader("Input Feature Values")
+        st.dataframe(final_features_df.T.style.format("{:.2f}"))
+        
+    except Exception as e:
+        st.error(f"Error generating SHAP explanation: {str(e)}")
    
