@@ -127,18 +127,18 @@ st.subheader("SHAP Waterfall Plot Explanation")
 
 @st.cache_data
 def load_training_data():
-    df = pd.read_csv('train_data0312.csv', encoding='utf8')
+    df = pd.read_csv('test_data0312.csv', encoding='utf8')
     x_train = df.drop('Frailty', axis=1)
     
     # 对训练数据应用相同的标准化
     continuous_cols = ["Age", "Lymphocyte_Percentage", 
-                      "Mean_Corpuscular_Hemoglobin_Concentration",
-                      "Albumin", "Estimated_Glomerular_Filtration_Rate",
-                      "Left_Ventricular_Ejection_Fraction"]
+                     "Mean_Corpuscular_Hemoglobin_Concentration",
+                     "Albumin", "Estimated_Glomerular_Filtration_Rate",
+                     "Left_Ventricular_Ejection_Fraction"]
     
     x_train_standard = x_train.copy()
     x_train_standard[continuous_cols] = scaler.transform(x_train[continuous_cols])
-    return x_train_standard  # 返回标准化后的数据
+    return x_train_standard
 
 xtrain_standard = load_training_data()
 
@@ -149,22 +149,22 @@ with st.spinner("Generating explanation..."):
         background = shap.sample(xtrain_standard, 100, random_state=42)
         explainer = shap.KernelExplainer(model.predict_proba, background)
         
-        # 计算SHAP值（final_features_df已经是标准化后的数据）
-        shap_values = explainer.shap_values(final_features_df)
-
-        # 获取预测类别（关键修复）
-        predicted_class = model.predict(final_features_df)[0]  # 确保这行存在
+        # 计算SHAP值并创建Explanation对象
+        shap_values = explainer(final_features_df)  # 直接获取Explanation对象
         
-       # 创建瀑布图 - 注意这里的缩进
-        plt.figure(figsize=(10, 6))  # 确保这行没有多余缩进
+        # 获取预测类别
+        predicted_class = model.predict(final_features_df)[0]
+        
+        # 创建瀑布图
+        plt.figure(figsize=(10, 6))
+        
+        # 选择对应类别的解释
         if predicted_class == 1:
-            shap.plots.waterfall(shap_values[1][0], 
-                               max_display=10,
-                               show=False)
+            shap.plots.waterfall(shap_values[..., 1][0],  # 获取第一个样本的类别1解释
+                               max_display=10)
         else:
-            shap.plots.waterfall(shap_values[0][0],
-                               max_display=10,
-                               show=False)
+            shap.plots.waterfall(shap_values[..., 0][0],  # 获取第一个样本的类别0解释
+                               max_display=10)
         
         plt.title(f"Feature Contributions (Predicted Class: {predicted_class})")
         st.pyplot(plt.gcf(), clear_figure=True)
@@ -172,6 +172,9 @@ with st.spinner("Generating explanation..."):
         # 添加特征值表格
         st.subheader("Input Feature Values")
         st.dataframe(final_features_df.T.style.format("{:.2f}"))
+        
+    except Exception as e:
+        st.error(f"Error generating SHAP explanation: {str(e)}")
         
     except Exception as e:
         st.error(f"Error generating SHAP explanation: {str(e)}")
