@@ -150,14 +150,14 @@ with st.spinner("Generating explanation..."):
         explainer = shap.KernelExplainer(model.predict_proba, background)
         
         # 计算SHAP值（final_features_df已经是标准化后的数据）
-        shap_values = explainer.shap_values(final_features_df)
+        shap_values = explainer(final_features_df)
         
         # ============= 主要修改开始 =============
         # 创建两列布局
         col1, col2 = st.columns([2, 1])  # 第一列宽度是第二列的两倍
         
         # 获取预测类别
-        predicted_class = model.predict(final_features)
+        predicted_class = model.predict(final_features)[0]
                                         
         with col1:
             # 创建瀑布图
@@ -181,4 +181,4 @@ with st.spinner("Generating explanation..."):
         # ============= 主要修改结束 =============
             
     except Exception as e:
-        st.error(f"Error generating SHAP explanation: {str(e)}")   
+        st.error(f"Error generating SHAP explanation: {str(e)}")
