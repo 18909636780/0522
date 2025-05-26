@@ -150,27 +150,29 @@ with st.spinner("Generating explanation..."):
         explainer = shap.KernelExplainer(model.predict_proba, background)
         
         # 计算SHAP值（final_features_df已经是标准化后的数据）
-        shap_values = explainer(final_features_df)
+        shap_values = explainer.shap_values(final_features_df)
+        expected_value = explainer.expected_value
+        
+        # 获取预测类别（确保是标量值）
+        predicted_class = int(model.predict(final_features)[0])  # 明确转换为整数
         
         # ============= 主要修改开始 =============
         # 创建两列布局
         col1, col2 = st.columns([2, 1])  # 第一列宽度是第二列的两倍
-        
-        # 获取预测类别
-        predicted_class = model.predict(final_features)[0]
                                         
         with col1:
             # 创建瀑布图
             plt.figure(figsize=(10, 6))
-            if predicted_class == 1:
-                shap.plots.waterfall(shap_values[1][0], 
-                                   max_display=10,
-                                   show=False)
-            else:
-                shap.plots.waterfall(shap_values[0][0],
-                                   max_display=10,
-                                   show=False)
             
+            # 创建Explanation对象
+            explanation = shap.Explanation(
+                values=shap_values[predicted_class][0],
+                base_values=expected_value[predicted_class],
+                data=final_features_df.iloc[0],
+                feature_names=final_features_df.columns.tolist()
+            )
+            
+            shap.plots.waterfall(explanation, max_display=10, show=False)
             plt.title(f"Feature Contributions (Predicted Class: {predicted_class})")
             st.pyplot(plt.gcf(), clear_figure=True)
             
