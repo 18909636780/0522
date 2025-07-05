@@ -213,30 +213,6 @@ if submitted:
             unsafe_allow_html=True
         )
         
-        # 临床建议
-        advice_box = st.container()
-        with advice_box:
-            st.markdown("### Clinical Recommendations")
-            if predicted_class == 1:
-                st.warning("""
-                🚨 **High Risk of Frailty Detected**  
-                This patient has a significantly elevated risk of frailty. Consider the following actions:
-                - Comprehensive geriatric assessment
-                - Nutritional supplementation if indicated
-                - Supervised physical activity program
-                - Medication review for potentially inappropriate medications
-                - Close follow-up monitoring
-                """)
-            else:
-                st.success("""
-                ✅ **Low Risk of Frailty Detected**  
-                While this patient currently shows low risk, consider these preventive measures:
-                - Encourage regular physical activity
-                - Monitor nutritional status
-                - Annual frailty screening
-                - Patient education on frailty prevention
-                """)
-        
         # SHAP解释图
         st.markdown("### Feature Impact Analysis")
         with st.spinner("Generating explanation..."):
@@ -276,10 +252,3 @@ if submitted:
             the risk prediction, while features in blue decrease it.*
             """)
         
-        # 原始数据展示
-        st.markdown("### Input Summary")
-        input_data = {
-            "Feature": feature_names,
-            "Value": feature_values
-        }
-        st.table(pd.DataFrame(input_data))
