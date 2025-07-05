@@ -253,8 +253,8 @@ if submitted:
                 columns=feature_names
             )
             
-            # 创建更美观的SHAP图
-            fig, ax = plt.subplots(figsize=(10, 6))
+            # 创建更美观的SHAP图，显示所有特征
+            fig, ax = plt.subplots(figsize=(10, 8))  # 增加图形高度以适应更多特征
             shap.plots.waterfall(
                 shap.Explanation(
                     values=shap_values_class[0], 
@@ -262,10 +262,11 @@ if submitted:
                     data=original_feature_values.iloc[0],
                     feature_names=original_feature_values.columns.tolist()
                 ),
-                max_display=10,
+                max_display=20,  # 设置为足够大的数以显示所有特征
                 show=False
             )
-            plt.title("Feature Contribution to Prediction", fontsize=14)
+            plt.title("Feature Contribution to Prediction", fontsize=14, pad=20)
+            plt.gcf().set_size_inches(10, len(feature_names)*0.6)  # 动态调整图形高度
             plt.tight_layout()
             st.pyplot(fig)
             
