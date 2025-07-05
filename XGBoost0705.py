@@ -177,7 +177,7 @@ if submitted:
                 shap_values_class = shap_values
 
             # 将标准化前的原始数据存储在变量中
-            original_feature_values = pd.DataFrame(features, columns=["Age","Lymphocyte_Percentage","Mean_Corpuscular_Hemoglobin_Concentration","Albumin","Estimated_Glomerular_Filtration_Rate","Left_Ventricular_Ejection_Fraction"])
+            original_feature_values = pd.DataFrame(features, columns=["Age", "Capacity_for_Action", "Smoking", "NYHA_Functional_Class", "Thiazide_Diuretics", "Cerebral_Infarction", "Lymphocyte_Percentage","Mean_Corpuscular_Hemoglobin_Concentration","Albumin","Estimated_Glomerular_Filtration_Rate","Left_Ventricular_Ejection_Fraction"])
 
             # 创建瀑布图
             fig, ax = plt.subplots()
