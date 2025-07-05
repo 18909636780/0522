@@ -46,25 +46,25 @@ with col1:
         Capacity_for_Action = st.selectbox("Capacity_for_Action:", options=list(Capacity_for_Action_options.keys()), format_func=lambda x: Capacity_for_Action_options[x])
 
         # Smoking
-        Smoking = st.selectbox("Smoking:", options=[0, 1], format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)')
+        Smoking = st.selectbox("Smoking:", options=[0, 1], format_func=lambda x: 'No' if x == 0 else 'Yes')
 
         # NYHA_Functional_Class
         NYHA_Functional_Class= st.selectbox("NYHA_Functional_Class:", options=list(NYHA_Functional_Class_options.keys()), format_func=lambda x: NYHA_Functional_Class_options[x])
 
         # Thiazide_Diuretics
-        Thiazide_Diuretics = st.selectbox("Thiazide_Diuretics:", options=[0, 1], format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)')
+        Thiazide_Diuretics = st.selectbox("Thiazide_Diuretics:", options=[0, 1], format_func=lambda x: 'No' if x == 0 else 'Yes')
 
         # Cerebral_Infarction
-        Cerebral_Infarction = st.selectbox("Cerebral_Infarction:", options=[0, 1], format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)')
+        Cerebral_Infarction = st.selectbox("Cerebral_Infarction:", options=[0, 1], format_func=lambda x: 'No' if x == 0 else 'Yes')
 
         # Lymphocyte_Percentage
-        Lymphocyte_Percentage = st.number_input("Lymphocyte_Percentage(%):", min_value=0.0, max_value=100.0, value=50.0,step=0.1,format="%.2f")
+        Lymphocyte_Percentage = st.number_input("Lymphocyte_Percentage(%):", min_value=0.0, max_value=100.0, value=20.0,step=0.1,format="%.2f")
     
         # Mean_Corpuscular_Hemoglobin_Concentration
-        Mean_Corpuscular_Hemoglobin_Concentration = st.number_input("Mean_Corpuscular_Hemoglobin_Concentration(g/L):", min_value=0.0, max_value=100.0, value=50.0,step=0.1,format="%.2f")
+        Mean_Corpuscular_Hemoglobin_Concentration = st.number_input("Mean_Corpuscular_Hemoglobin_Concentration(g/L):", min_value=0.0, max_value=1000.0, value=300.0)
 
         # Albumin
-        Albumin = st.number_input("Albumin(g/L):", min_value=0.0, max_value=100.0, value=40.0,step=0.1,format="%.2f")
+        Albumin = st.number_input("Albumin(g/L):", min_value=0.0, max_value=100.0, value=20.0,step=0.1,format="%.2f")
 
         # Estimated_Glomerular_Filtration_Rate
         Estimated_Glomerular_Filtration_Rate = st.number_input("Estimated_Glomerular_Filtration_Rate(%):", min_value=0.0, max_value=100.0, value=50.0,step=0.1,format="%.2f")
