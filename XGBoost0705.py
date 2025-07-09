@@ -82,6 +82,10 @@ st.markdown("""
     div[data-baseweb="input"] {
         margin-bottom: -1rem;
     }
+    /* Adjust column spacing */
+    .st-emotion-cache-1v0mbdj {
+        padding-right: 1rem;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -89,8 +93,8 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center; font-size: 1.5rem;'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-size: 0.9rem;'>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
-# 创建两列布局 (50%, 50%)
-col1, col2 = st.columns(2, gap="medium")
+# 创建两列布局 (40%, 60%) - 左边窄右边宽
+col1, col2 = st.columns([4, 6], gap="medium")
 
 with col1:
     # 输入表单 - 更紧凑
@@ -204,7 +208,7 @@ if submitted:
             unsafe_allow_html=True
         )
         
-        # SHAP解释图 - 更紧凑
+        # SHAP解释图 - 更宽
         st.markdown("**Feature Impact Analysis**")
         with st.spinner("Generating explanation..."):
             explainer_shap = shap.TreeExplainer(model)
@@ -220,8 +224,8 @@ if submitted:
                 columns=feature_names
             )
             
-            # 创建更紧凑的SHAP图
-            fig, ax = plt.subplots(figsize=(8, 6))  # 更小的图形尺寸
+            # 创建更宽的SHAP图
+            fig, ax = plt.subplots(figsize=(10, 7))  # 更宽的图形尺寸
             shap.plots.waterfall(
                 shap.Explanation(
                     values=shap_values_class[0], 
@@ -229,11 +233,11 @@ if submitted:
                     data=original_feature_values.iloc[0],
                     feature_names=original_feature_values.columns.tolist()
                 ),
-                max_display=10,  # 显示更少的特征以保持紧凑
+                max_display=12,  # 显示更多特征
                 show=False
             )
             plt.title("Feature Contribution to Prediction", fontsize=12, pad=10)
-            plt.gcf().set_size_inches(7, 5)  # 固定图形大小
+            plt.gcf().set_size_inches(9, 6)  # 固定图形大小
             plt.tight_layout()
             st.pyplot(fig)
             
