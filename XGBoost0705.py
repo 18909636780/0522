@@ -106,7 +106,7 @@ with col2:
 with col1:
     # 输入表单 - 更紧凑
     with st.container():
-        st.markdown("### Patient Information")
+        #st.markdown("### Patient Information")
         with st.form("input_form"):
             # 将输入分成几个部分
             st.markdown("**Demographic Information**")
