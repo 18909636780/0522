@@ -6,11 +6,11 @@ import shap
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
-# 页面配置 - 设置更宽的布局和页面标题
+# 页面配置 - 设置更紧凑的布局
 st.set_page_config(
     page_title="Frailty Predictor for HF Patients",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # 加载模型和数据
@@ -39,7 +39,7 @@ feature_names = [
     "Estimated_Glomerular_Filtration_Rate", "Left_Ventricular_Ejection_Fraction"
 ]
 
-# 自定义CSS样式
+# 自定义CSS样式 - 更紧凑
 st.markdown("""
     <style>
     .main {
@@ -49,116 +49,108 @@ st.markdown("""
         background-color: white;
     }
     .prediction-box {
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .high-risk {
         background-color: #ffdddd;
-        border-left: 5px solid #ff5252;
+        border-left: 4px solid #ff5252;
     }
     .low-risk {
         background-color: #ddffdd;
-        border-left: 5px solid #4caf50;
+        border-left: 4px solid #4caf50;
     }
     .feature-section {
         background-color: white;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     .section-title {
         color: #2c3e50;
         border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
+        padding-bottom: 5px;
+        font-size: 1.1rem;
+    }
+    .stNumberInput, .stSelectbox {
+        padding-bottom: 5px;
+    }
+    /* Make form inputs more compact */
+    div[data-baseweb="input"] {
+        margin-bottom: -1rem;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 主标题
-st.title("🏥 Frailty Risk Assessment for Heart Failure Patients")
-st.markdown("""
-    *This tool predicts the risk of frailty in heart failure patients with acute infections.*  
-    *Please fill in the patient's details below and click 'Predict' to get the assessment.*
-    """)
+# 主标题 - 更简洁
+st.markdown("<h1 style='text-align: center; font-size: 1.5rem;'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 0.9rem;'>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
-# 创建三列布局 (20%, 60%, 20%)
-col1, col2, col3 = st.columns([0.2, 0.6, 0.2])
+# 创建两列布局 (50%, 50%)
+col1, col2 = st.columns(2, gap="medium")
 
-with col2:
-    # 使用扩展器组织输入表单
-    with st.expander("📋 Patient Information Form", expanded=True):
+with col1:
+    # 输入表单 - 更紧凑
+    with st.container():
+        st.markdown("### Patient Information")
         with st.form("input_form"):
             # 将输入分成几个部分
-            st.markdown("### Demographic Information")
-            cols_demo = st.columns(2)
-            with cols_demo[0]:
-                Age = st.number_input("Age (years)", min_value=1, max_value=150, value=60)
-            with cols_demo[1]:
-                Capacity_for_Action = st.selectbox(
-                    "Mobility Status", 
-                    options=list(Capacity_for_Action_options.keys()), 
-                    format_func=lambda x: Capacity_for_Action_options[x]
-                )
+            st.markdown("**Demographic Information**")
+            Age = st.number_input("Age (years)", min_value=1, max_value=150, value=60)
+            Capacity_for_Action = st.selectbox(
+                "Mobility Status", 
+                options=list(Capacity_for_Action_options.keys()), 
+                format_func=lambda x: Capacity_for_Action_options[x]
+            )
             
-            st.markdown("### Clinical Characteristics")
-            cols_clinical = st.columns(2)
-            with cols_clinical[0]:
-                NYHA_Functional_Class = st.selectbox(
-                    "NYHA Functional Class", 
-                    options=list(NYHA_Functional_Class_options.keys()), 
-                    format_func=lambda x: NYHA_Functional_Class_options[x]
-                )
-                Smoking = st.selectbox(
-                    "Smoking Status", 
-                    options=[0, 1], 
-                    format_func=lambda x: 'Non-smoker' if x == 0 else 'Smoker'
-                )
-            with cols_clinical[1]:
-                Thiazide_Diuretics = st.selectbox(
-                    "Thiazide Diuretics Use", 
-                    options=[0, 1], 
-                    format_func=lambda x: 'No' if x == 0 else 'Yes'
-                )
-                Cerebral_Infarction = st.selectbox(
-                    "History of Cerebral Infarction", 
-                    options=[0, 1], 
-                    format_func=lambda x: 'No' if x == 0 else 'Yes'
-                )
+            st.markdown("**Clinical Characteristics**")
+            NYHA_Functional_Class = st.selectbox(
+                "NYHA Functional Class", 
+                options=list(NYHA_Functional_Class_options.keys()), 
+                format_func=lambda x: NYHA_Functional_Class_options[x]
+            )
+            Smoking = st.selectbox(
+                "Smoking Status", 
+                options=[0, 1], 
+                format_func=lambda x: 'Non-smoker' if x == 0 else 'Smoker'
+            )
+            Thiazide_Diuretics = st.selectbox(
+                "Thiazide Diuretics Use", 
+                options=[0, 1], 
+                format_func=lambda x: 'No' if x == 0 else 'Yes'
+            )
+            Cerebral_Infarction = st.selectbox(
+                "History of Cerebral Infarction", 
+                options=[0, 1], 
+                format_func=lambda x: 'No' if x == 0 else 'Yes'
+            )
             
-            st.markdown("### Laboratory Values")
-            cols_lab1 = st.columns(3)
-            with cols_lab1[0]:
-                Lymphocyte_Percentage = st.number_input(
-                    "Lymphocyte Percentage (%)", 
-                    min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
-                )
-            with cols_lab1[1]:
-                Mean_Corpuscular_Hemoglobin_Concentration = st.number_input(
-                    "MCHC (g/L)", 
-                    min_value=0.0, max_value=1000.0, value=300.0, step=1.0
-                )
-            with cols_lab1[2]:
-                Albumin = st.number_input(
-                    "Albumin (g/L)", 
-                    min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
-                )
+            st.markdown("**Laboratory Values**")
+            Lymphocyte_Percentage = st.number_input(
+                "Lymphocyte Percentage (%)", 
+                min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
+            )
+            Mean_Corpuscular_Hemoglobin_Concentration = st.number_input(
+                "MCHC (g/L)", 
+                min_value=0.0, max_value=1000.0, value=300.0, step=1.0
+            )
+            Albumin = st.number_input(
+                "Albumin (g/L)", 
+                min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
+            )
+            Estimated_Glomerular_Filtration_Rate = st.number_input(
+                "eGFR (%)", 
+                min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
+            )
+            Left_Ventricular_Ejection_Fraction = st.number_input(
+                "LVEF (%)", 
+                min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
+            )
             
-            cols_lab2 = st.columns(2)
-            with cols_lab2[0]:
-                Estimated_Glomerular_Filtration_Rate = st.number_input(
-                    "eGFR (%)", 
-                    min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
-                )
-            with cols_lab2[1]:
-                Left_Ventricular_Ejection_Fraction = st.number_input(
-                    "LVEF (%)", 
-                    min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
-                )
-            
-            submitted = st.form_submit_button("🔍 Predict Frailty Risk", use_container_width=True)
+            submitted = st.form_submit_button("Predict Frailty Risk", use_container_width=True)
 
 # 准备输入特征
 if submitted:
@@ -193,18 +185,17 @@ if submitted:
     prob_class1 = predicted_proba[1]
     predicted_class = 1 if prob_class1 >= OPTIMAL_THRESHOLD else 0
     
-    # 显示结果 - 使用中间列
     with col2:
-        # 预测结果卡片
+        # 预测结果卡片 - 更紧凑
         risk_class = "high-risk" if predicted_class == 1 else "low-risk"
         st.markdown(
             f"""
             <div class="prediction-box {risk_class}">
-                <h3 style="margin-top:0;">Prediction Results</h3>
-                <p style="font-size:24px; font-weight:bold; margin-bottom:0;">
+                <h3 style='margin-top:0; font-size: 1.2rem;'>Prediction Results</h3>
+                <p style="font-size:1.1rem; font-weight:bold; margin-bottom:0;">
                     Frailty Probability: <span style="color:{'#ff5252' if predicted_class == 1 else '#4caf50'}">{prob_class1:.1%}</span>
                 </p>
-                <p style="font-size:18px;">
+                <p style="font-size:0.9rem;">
                     Risk Classification: <strong>{'High Risk' if predicted_class == 1 else 'Low Risk'}</strong>
                     (Threshold: {OPTIMAL_THRESHOLD:.0%})
                 </p>
@@ -213,8 +204,8 @@ if submitted:
             unsafe_allow_html=True
         )
         
-        # SHAP解释图
-        st.markdown("### Feature Impact Analysis")
+        # SHAP解释图 - 更紧凑
+        st.markdown("**Feature Impact Analysis**")
         with st.spinner("Generating explanation..."):
             explainer_shap = shap.TreeExplainer(model)
             shap_values = explainer_shap.shap_values(final_features_df)
@@ -229,8 +220,8 @@ if submitted:
                 columns=feature_names
             )
             
-            # 创建更美观的SHAP图，显示所有特征
-            fig, ax = plt.subplots(figsize=(10, 8))  # 增加图形高度以适应更多特征
+            # 创建更紧凑的SHAP图
+            fig, ax = plt.subplots(figsize=(8, 6))  # 更小的图形尺寸
             shap.plots.waterfall(
                 shap.Explanation(
                     values=shap_values_class[0], 
@@ -238,17 +229,15 @@ if submitted:
                     data=original_feature_values.iloc[0],
                     feature_names=original_feature_values.columns.tolist()
                 ),
-                max_display=20,  # 设置为足够大的数以显示所有特征
+                max_display=10,  # 显示更少的特征以保持紧凑
                 show=False
             )
-            plt.title("Feature Contribution to Prediction", fontsize=14, pad=20)
-            plt.gcf().set_size_inches(10, len(feature_names)*0.6)  # 动态调整图形高度
+            plt.title("Feature Contribution to Prediction", fontsize=12, pad=10)
+            plt.gcf().set_size_inches(7, 5)  # 固定图形大小
             plt.tight_layout()
             st.pyplot(fig)
             
             st.caption("""
-            *This waterfall plot shows how each feature contributes to pushing the model's output \
-            from the base value (average prediction) to the final prediction. Features in red increase \
-            the risk prediction, while features in blue decrease it.*
+            This plot shows how each feature contributes to the prediction. Features in red increase \
+            the risk prediction, while features in blue decrease it.
             """)
-        
