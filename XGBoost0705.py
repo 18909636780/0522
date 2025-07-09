@@ -86,15 +86,22 @@ st.markdown("""
     .st-emotion-cache-1v0mbdj {
         padding-right: 1rem;
     }
+    /* Right-aligned title */
+    .right-title {
+        text-align: left;
+        margin-top: 0;
+        padding-top: 0;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# 主标题 - 更简洁
-st.markdown("<h1 style='text-align: center; font-size: 1.5rem;'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 0.9rem;'>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
-
 # 创建两列布局 (40%, 60%) - 左边窄右边宽
 col1, col2 = st.columns([4, 6], gap="medium")
+
+with col2:
+    # 将标题放在右列
+    st.markdown("<h1 class='right-title' style='font-size: 1.5rem;'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size: 0.9rem;'>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
 with col1:
     # 输入表单 - 更紧凑
@@ -127,7 +134,7 @@ with col1:
                 format_func=lambda x: 'No' if x == 0 else 'Yes'
             )
             Cerebral_Infarction = st.selectbox(
-                "History of Cerebral Infarction", 
+                "Cerebral Infarction History", 
                 options=[0, 1], 
                 format_func=lambda x: 'No' if x == 0 else 'Yes'
             )
@@ -138,7 +145,7 @@ with col1:
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
             )
             Mean_Corpuscular_Hemoglobin_Concentration = st.number_input(
-                "MCHC (g/L)", 
+                "Mean Corpuscular Hemoglobin Concentration (g/L)", 
                 min_value=0.0, max_value=1000.0, value=300.0, step=1.0
             )
             Albumin = st.number_input(
@@ -146,11 +153,11 @@ with col1:
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
             )
             Estimated_Glomerular_Filtration_Rate = st.number_input(
-                "eGFR (%)", 
+                "Estimated Glomerular Filtration Rate (%)", 
                 min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
             )
             Left_Ventricular_Ejection_Fraction = st.number_input(
-                "LVEF (%)", 
+                "Left Ventricular Ejection Fraction (%)", 
                 min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
             )
             
