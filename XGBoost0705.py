@@ -120,19 +120,8 @@ with col2:
     st.markdown("<div class='right-column'>", unsafe_allow_html=True)
     
     # Title and description in right column (with smaller font)
-    st.markdown("""
-    <style>
-    .right-title {
-        text-align: left;
-        margin-top: 0;
-        padding-top: 0;
-        font-size: 1.0rem;  # 修改这里
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# 保持标题部分不变
-    st.markdown("<h1 class='right-title'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:1.2rem'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
+    #st.markdown("<h1 class='right-title'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
     st.markdown("<p>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
 # Left column content - input form
