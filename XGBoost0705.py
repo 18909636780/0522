@@ -120,7 +120,7 @@ with col2:
     st.markdown("<div class='right-column'>", unsafe_allow_html=True)
     
     # Title and description in right column (with smaller font)
-    st.markdown("<h1 style='font-size:1.2rem'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:1.3rem'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
     #st.markdown("<h1 class='right-title'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
     st.markdown("<p>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
