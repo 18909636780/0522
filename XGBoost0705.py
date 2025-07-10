@@ -126,7 +126,7 @@ with col2:
         text-align: left;
         margin-top: 0;
         padding-top: 0;
-        font-size: 1.2rem;  # 修改这里
+        font-size: 1.1rem;  # 修改这里
     }
     </style>
 """, unsafe_allow_html=True)
