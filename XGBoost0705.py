@@ -60,13 +60,13 @@ st.markdown("""
     
     /* Right column styling */
     .right-column {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
     .right-title {
         text-align: left;
         margin-top: 0;
         padding-top: 0;
-        font-size: 1.3rem;
+        font-size: 1.5rem;
     }
     
     /* Prediction box */
@@ -96,26 +96,32 @@ st.markdown("""
         font-weight: bold;
         margin-bottom: 8px;
     }
+    
+    /* Make columns equal height */
+    .column-container {
+        display: flex;
+        flex-direction: row;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # Create two columns (40%, 60%)
 col1, col2 = st.columns([4, 6], gap="medium")
 
+# Right column content
 with col2:
-    # Right column content wrapped in div for styling
     st.markdown("<div class='right-column'>", unsafe_allow_html=True)
     
-    # Title and description
+    # Title and description in right column
     st.markdown("<h1 class='right-title'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
     st.markdown("<p>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
+# Left column content - input form
 with col1:
-    # Input form - more compact
     with st.container():
         with st.form("input_form"):
             # Demographic Information
-            #st.markdown("**Demographic Information**")
+            st.markdown("<div class='section-header'>Demographic Information</div>", unsafe_allow_html=True)
             Age = st.number_input("Age (years)", min_value=1, max_value=150, value=60)
             Capacity_for_Action = st.selectbox(
                 "Mobility Status", 
@@ -124,7 +130,7 @@ with col1:
             )
             
             # Clinical Characteristics
-            #st.markdown("**Clinical Characteristics**")
+            st.markdown("<div class='section-header'>Clinical Characteristics</div>", unsafe_allow_html=True)
             NYHA_Functional_Class = st.selectbox(
                 "NYHA Functional Class", 
                 options=list(NYHA_Functional_Class_options.keys()), 
@@ -147,7 +153,7 @@ with col1:
             )
             
             # Laboratory Values
-            #st.markdown("**Laboratory Values**")
+            st.markdown("<div class='section-header'>Laboratory Values</div>", unsafe_allow_html=True)
             Lymphocyte_Percentage = st.number_input(
                 "Lymphocyte Percentage (%)", 
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
@@ -171,7 +177,7 @@ with col1:
             
             submitted = st.form_submit_button("Predict Frailty Risk", use_container_width=True)
 
-# Prepare input features
+# Prepare input features and show results when submitted
 if submitted:
     feature_values = [
         Age, Capacity_for_Action, Smoking, NYHA_Functional_Class, 
@@ -205,16 +211,16 @@ if submitted:
     predicted_class = 1 if prob_class1 >= OPTIMAL_THRESHOLD else 0
     
     with col2:
-        # Prediction results - more compact
+        # Prediction results
         risk_class = "high-risk" if predicted_class == 1 else "low-risk"
         st.markdown(
             f"""
             <div class="prediction-box {risk_class}">
-                <h3 style='margin-top:0; font-size: 1rem;'>Prediction Results</h3>
-                <p style="font-size:0.95rem; font-weight:bold; margin-bottom:0;">
+                <h3 style='margin-top:0; font-size: 1.1rem;'>Prediction Results</h3>
+                <p style="font-size:1rem; font-weight:bold; margin-bottom:0;">
                     Frailty Probability: <span style="color:{'#ff5252' if predicted_class == 1 else '#4caf50'}">{prob_class1:.1%}</span>
                 </p>
-                <p style="font-size:0.85rem;">
+                <p style="font-size:0.9rem;">
                     Risk Classification: <strong>{'High Risk' if predicted_class == 1 else 'Low Risk'}</strong>
                     (Threshold: {OPTIMAL_THRESHOLD:.0%})
                 </p>
