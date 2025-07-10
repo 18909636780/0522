@@ -120,6 +120,18 @@ with col2:
     st.markdown("<div class='right-column'>", unsafe_allow_html=True)
     
     # Title and description in right column (with smaller font)
+    st.markdown("""
+    <style>
+    .right-title {
+        text-align: left;
+        margin-top: 0;
+        padding-top: 0;
+        font-size: 1.2rem;  # 修改这里
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 保持标题部分不变
     st.markdown("<h1 class='right-title'>🏥 Frailty Risk Assessment for Heart Failure Patients</h1>", unsafe_allow_html=True)
     st.markdown("<p>This tool predicts the risk of frailty in heart failure patients with acute infections.</p>", unsafe_allow_html=True)
 
@@ -163,7 +175,7 @@ with col1:
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
             )
             Mean_Corpuscular_Hemoglobin_Concentration = st.number_input(
-                "MCHC (g/L)", 
+                "Mean Corpuscular Hemoglobin Concentration (g/L)", 
                 min_value=0.0, max_value=1000.0, value=300.0, step=1.0
             )
             Albumin = st.number_input(
@@ -171,11 +183,11 @@ with col1:
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
             )
             Estimated_Glomerular_Filtration_Rate = st.number_input(
-                "eGFR (%)", 
+                "Estimated Glomerular Filtration Rate (%)", 
                 min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
             )
             Left_Ventricular_Ejection_Fraction = st.number_input(
-                "LVEF (%)", 
+                "Left Ventricular Ejection Fraction (%)", 
                 min_value=0.0, max_value=100.0, value=50.0, step=0.1, format="%.1f"
             )
             
@@ -272,14 +284,14 @@ if submitted:
             """)
             
             # Added abbreviations section
-            st.markdown("""
-            <div class='abbreviations'>
-                <strong>Abbreviations:</strong><br>
-                MCHC: Mean Corpuscular Hemoglobin Concentration<br>
-                eGFR: Estimated Glomerular Filtration Rate<br>
-                LVEF: Left Ventricular Ejection Fraction
-            </div>
-            """, unsafe_allow_html=True)
+            #st.markdown("""
+            #<div class='abbreviations'>
+               # <strong>Abbreviations:</strong><br>
+               # MCHC: Mean Corpuscular Hemoglobin Concentration<br>
+               # eGFR: Estimated Glomerular Filtration Rate<br>
+               # LVEF: Left Ventricular Ejection Fraction
+            #</div>
+           # """, unsafe_allow_html=True)
         
         # Close right column div
-        st.markdown("</div>", unsafe_allow_html=True)
+        #st.markdown("</div>", unsafe_allow_html=True)
