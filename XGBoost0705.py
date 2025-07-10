@@ -115,7 +115,7 @@ with col1:
     with st.container():
         with st.form("input_form"):
             # Demographic Information
-            st.markdown("**Demographic Information**")
+            #st.markdown("**Demographic Information**")
             Age = st.number_input("Age (years)", min_value=1, max_value=150, value=60)
             Capacity_for_Action = st.selectbox(
                 "Mobility Status", 
@@ -124,7 +124,7 @@ with col1:
             )
             
             # Clinical Characteristics
-            st.markdown("**Clinical Characteristics**")
+            #st.markdown("**Clinical Characteristics**")
             NYHA_Functional_Class = st.selectbox(
                 "NYHA Functional Class", 
                 options=list(NYHA_Functional_Class_options.keys()), 
@@ -147,7 +147,7 @@ with col1:
             )
             
             # Laboratory Values
-            st.markdown("**Laboratory Values**")
+            #st.markdown("**Laboratory Values**")
             Lymphocyte_Percentage = st.number_input(
                 "Lymphocyte Percentage (%)", 
                 min_value=0.0, max_value=100.0, value=20.0, step=0.1, format="%.1f"
